@@ -322,4 +322,288 @@ EJERCICIO 17 [INTERMEDIO]: Validar Múltiples Tipos de Delimitadores
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ENUNCIADO:
-Exte
+Extender el ejercicio anterior para validar paréntesis (), corchetes [] y
+llaves {}. Los delimitadores deben cerrarse en el orden correcto.
+Ejemplos:
+- "{[()]}" → Verdadero
+- "{[(])}" → Falso (orden incorrecto)
+- "{[}" → Falso (falta cerrar)
+
+🔹 PSEUDOCÓDIGO:
+   Función validarDelimitadores(expresion):
+       pila ← nueva Pila()
+       aperturas ← {'(', '[', '{'}
+       cierres ← {')', ']', '}'}
+       pares ← {')': '(', ']': '[', '}': '{'}
+       
+       Para cada caracter en expresion:
+           Si caracter está en aperturas:
+               pila.push(caracter)
+           SiNo Si caracter está en cierres:
+               Si pila.isEmpty():
+                   Retornar Falso
+               Si pila.pop() != pares[caracter]:
+                   Retornar Falso
+       
+       Retornar pila.isEmpty()
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EJERCICIO 18 [INTERMEDIO]: Evaluador de Expresiones Postfijas (RPN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENUNCIADO:
+Implementar un evaluador de expresiones en notación postfija (Reverse Polish
+Notation). En RPN, los operadores van después de los operandos.
+Ejemplo: "3 4 + 2 *" equivale a (3 + 4) * 2 = 14
+
+🔹 PSEUDOCÓDIGO:
+   Función evaluarPostfija(expresion):
+       pila ← nueva Pila()
+       tokens ← dividir expresion por espacios
+       
+       Para cada token en tokens:
+           Si token es número:
+               pila.push(convertir token a número)
+           SiNo:  // token es operador
+               operando2 ← pila.pop()
+               operando1 ← pila.pop()
+               resultado ← aplicar operador(operando1, operando2, token)
+               pila.push(resultado)
+       
+       Retornar pila.pop()
+
+
+           pilaRehacer.push(contenido)
+           contenido ← pilaDeshacer.pop()
+       
+       Función rehacer():
+           Si pilaRehacer.isEmpty():
+               retornar
+           pilaDeshacer.push(contenido)
+           contenido ← pilaRehacer.pop()
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EJERCICIO 19 [INTERMEDIO]: Convertir Infija a Postfija
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENUNCIADO:
+Implementar el algoritmo Shunting Yard para convertir expresiones infijas
+(notación normal) a postfijas. Considerar precedencia de operadores y paréntesis.
+Ejemplo: "3 + 4 * 2" → "3 4 2 * +"
+
+🔹 PSEUDOCÓDIGO:
+   Función infijaAPostfija(expresion):
+       salida ← lista vacía
+       pila ← nueva Pila()
+       precedencia ← {'+': 1, '-': 1, '*': 2, '/': 2}
+       
+       tokens ← tokenizar(expresion)
+       
+       Para cada token en tokens:
+           Si token es número:
+               agregar token a salida
+           SiNo Si token es '(':
+               pila.push(token)
+           SiNo Si token es ')':
+               Mientras pila.peek() != '(':
+                   agregar pila.pop() a salida
+               pila.pop()  // eliminar '('
+           SiNo:  // token es operador
+               Mientras NO pila.isEmpty() Y 
+                        pila.peek() != '(' Y
+                        precedencia[pila.peek()] >= precedencia[token]:
+                   agregar pila.pop() a salida
+               pila.push(token)
+       
+       Mientras NO pila.isEmpty():
+           agregar pila.pop() a salida
+       
+       Retornar unir salida con espacios
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EJERCICIO 20 [INTERMEDIO]: Historial de Navegación
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENUNCIADO:
+Implementar un sistema de historial de navegación web usando dos pilas:
+una para "atrás" y otra para "adelante". Implementar las funciones:
+- visitar(url): visitar nueva página
+- atras(): volver a la página anterior
+- adelante(): ir a la página siguiente
+
+🔹 PSEUDOCÓDIGO:
+   Clase Navegador:
+       Atributos:
+           pilaAtras ← nueva Pila()
+           pilaAdelante ← nueva Pila()
+           paginaActual ← null
+       
+       Función visitar(url):
+           Si paginaActual != null:
+               pilaAtras.push(paginaActual)
+           paginaActual ← url
+           limpiar pilaAdelante
+       
+       Función atras():
+           Si pilaAtras.isEmpty():
+               error "No hay páginas anteriores"
+           pilaAdelante.push(paginaActual)
+           paginaActual ← pilaAtras.pop()
+       
+       Función adelante():
+           Si pilaAdelante.isEmpty():
+               error "No hay páginas siguientes"
+           pilaAtras.push(paginaActual)
+           paginaActual ← pilaAdelante.pop()
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EJERCICIO 21 [INTERMEDIO]: Verificar Palíndromos
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENUNCIADO:
+Usar una pila para verificar si una palabra es un palíndromo (se lee igual
+de izquierda a derecha que de derecha a izquierda). Ignorar espacios y
+mayúsculas/minúsculas.
+Ejemplos: "anilina", "radar", "reconocer"
+
+🔹 PSEUDOCÓDIGO:
+   Función esPalindromo(texto):
+       pila ← nueva Pila()
+       textoLimpio ← eliminar espacios y convertir a minúsculas
+       
+       // Apilar primera mitad
+       Para i desde 0 hasta longitud(textoLimpio)/2 - 1:
+           pila.push(textoLimpio[i])
+       
+       // Comparar segunda mitad
+       inicio ← Si longitud(textoLimpio) es impar entonces longitud/2 + 1 
+                SiNo longitud/2
+       
+       Para i desde inicio hasta fin:
+           Si pila.isEmpty() O textoLimpio[i] != pila.pop():
+               Retornar Falso
+       
+       Retornar Verdadero
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EJERCICIO 22 [INTERMEDIO]: Sistema Deshacer/Rehacer (Undo/Redo)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENUNCIADO:
+Implementar un editor de texto simple con funcionalidad de deshacer y rehacer
+usando dos pilas. Debe soportar:
+- escribir(texto): agregar texto
+- deshacer(): deshacer última acción
+- rehacer(): rehacer acción deshecha
+
+🔹 PSEUDOCÓDIGO:
+   Clase EditorTexto:
+       Atributos:
+           contenido ← ""
+           pilaDeshacer ← nueva Pila()
+           pilaRehacer ← nueva Pila()
+       
+       Función escribir(texto):
+           pilaDeshacer.push(contenido)
+           contenido ← contenido + texto
+           limpiar pilaRehacer
+       
+       Función deshacer():
+           Si pilaDeshacer.isEmpty():
+               retornar
+           pilaRehacer.push(contenido)
+           contenido ← pilaDeshacer.pop()
+       
+       Función rehacer():
+           Si pilaRehacer.isEmpty():
+               retornar
+           pilaDeshacer.push(contenido)
+           contenido ← pilaRehacer.pop()
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EJERCICIO 23 [INTERMEDIO]: Torre de Hanoi
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENUNCIADO:
+Implementar el juego de la Torre de Hanoi usando pilas. El problema consiste
+en mover n discos de una torre origen a una torre destino usando una torre
+auxiliar, con las reglas:
+- Solo se puede mover un disco a la vez
+- Un disco más grande no puede estar sobre uno más pequeño
+
+🔹 PSEUDOCÓDIGO:
+   Función hanoi(n, origen, destino, auxiliar):
+       Si n == 1:
+           mover disco de origen a destino
+           retornar
+       
+       hanoi(n-1, origen, auxiliar, destino)
+       mover disco de origen a destino
+       hanoi(n-1, auxiliar, destino, origen)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EJERCICIO 24 [INTERMEDIO]: Validar Sintaxis HTML Simplificada
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENUNCIADO:
+Usar una pila para verificar si las etiquetas HTML están correctamente
+balanceadas y anidadas. Considerar solo etiquetas de apertura <tag> y
+cierre </tag>.
+Ejemplo válido: "<html><body><h1>Título</h1></body></html>"
+Ejemplo inválido: "<html><body></html></body>"
+
+🔹 PSEUDOCÓDIGO:
+   Función validarHTML(codigo):
+       pila ← nueva Pila()
+       etiquetas ← extraer todas las etiquetas del código
+       
+       Para cada etiqueta en etiquetas:
+           Si etiqueta es de apertura:
+               pila.push(nombre de etiqueta)
+           SiNo:  // etiqueta de cierre
+               Si pila.isEmpty():
+                   Retornar Falso
+               Si pila.pop() != nombre de etiqueta:
+                   Retornar Falso
+       
+       Retornar pila.isEmpty()
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EJERCICIO 25 [INTERMEDIO]: Pila con Mínimo en O(1)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ENUNCIADO:
+Diseñar una pila que además de las operaciones normales (push, pop, peek),
+pueda retornar el elemento mínimo en tiempo constante O(1). Implementar:
+- push(elemento)
+- pop()
+- peek()
+- getMin() → retorna el mínimo actual en O(1)
+
+🔹 PSEUDOCÓDIGO:
+   Clase PilaMinimo:
+       Atributos:
+           pilaElementos ← nueva Pila()
+           pilaMinimos ← nueva Pila()
+       
+       Función push(elemento):
+           pilaElementos.push(elemento)
+           
+           Si pilaMinimos.isEmpty() O elemento <= pilaMinimos.peek():
+               pilaMinimos.push(elemento)
+       
+       Función pop():
+           Si pilaElementos.isEmpty():
+               error
+           
+           elemento ← pilaElementos.pop()
+           Si elemento == pilaMinimos.peek():
+               pilaMinimos.pop()
+           
+           Retornar elemento
+       
+       Función getMin():
+           Si pilaMinimos.isEmpty():
+               error
+           Retornar pilaMinimos.peek()
+
