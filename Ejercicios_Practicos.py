@@ -52,7 +52,7 @@ if __name__ == "__main__":
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 2 [BÁSICO]: TAD Rectangulo
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+awdasdasd sdasdasdasd
 ENUNCIADO:
 Crear un TAD Rectangulo con base y altura. Implementar operaciones para 
 calcular área, perímetro y verificar si es un cuadrado.
