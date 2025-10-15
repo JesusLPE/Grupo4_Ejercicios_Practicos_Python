@@ -131,6 +131,56 @@ duplicados). Implementar operaciones de unión, intersección y diferencia.
          * interseccion(otroConjunto) → Conjunto
          * diferencia(otroConjunto) → Conjunto
 
+Código:
+class Conjunto:
+    def __init__(self):
+        self.elementos = set()  
+    def agregar(self, elemento):
+        self.elementos.add(elemento)
+
+    def eliminar(self, elemento):
+        if elemento in self.elementos:
+            self.elementos.remove(elemento)
+            return True
+        return False
+
+    def contiene(self, elemento):
+        return elemento in self.elementos
+
+    def tamaño(self):
+        return len(self.elementos)
+
+    def union(self, otroConjunto):
+        resultado = Conjunto()
+        resultado.elementos = self.elementos.union(otroConjunto.elementos)
+        return resultado
+
+    def interseccion(self, otroConjunto):
+        resultado = Conjunto()
+        resultado.elementos = self.elementos.intersection(otroConjunto.elementos)
+        return resultado
+
+    def diferencia(self, otroConjunto):
+        resultado = Conjunto()
+        resultado.elementos = self.elementos.difference(otroConjunto.elementos)
+        return resultado
+
+    def __str__(self):
+        return f"{self.elementos}"
+
+A = Conjunto()
+B = Conjunto()
+A.agregar(1)
+A.agregar(2)
+A.agregar(3)
+B.agregar(3)
+B.agregar(4)
+print("A =", A)
+print("B =", B)
+print("Unión =", A.union(B))
+print("Intersección =", A.interseccion(B))
+print("Diferencia =", A.diferencia(B))
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 6 [INTERMEDIO]: TAD Fecha
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -260,6 +310,17 @@ Analizar la complejidad temporal del siguiente código con bucles anidados:
                    Retornar Verdadero
        Retornar Falso
 
+Código:
+def buscar_duplicados(lista):
+    """
+    Busca elementos duplicados en una lista
+    """
+    n = len(lista)
+    for i in range(n):
+        for j in range(i + 1, n):
+            if lista[i] == lista[j]:
+                return True
+    return False
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 11 [INTERMEDIO]: Búsqueda Binaria
@@ -408,6 +469,30 @@ convertirse en "ALOH".
            resultado ← resultado + pila.pop()
        
        Retornar resultado
+
+Código:
+class Pila:
+    def __init__(self):
+        self.items = []
+    def push(self, elemento):
+        self.items.append(elemento)
+    def pop(self):
+        if not self.isEmpty():
+            return self.items.pop()
+        return None
+    def isEmpty(self):
+        return len(self.items) == 0
+def invertirCadena(texto):
+    pila = Pila()
+    for caracter in texto:
+        pila.push(caracter)
+    resultado = ""
+    while not pila.isEmpty():
+        resultado += pila.pop()
+    return resultado
+cadena = "HOLA"
+print("Original:", cadena)
+print("Invertida:", invertirCadena(cadena))
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 16 [BÁSICO]: Validar Paréntesis Balanceados
@@ -616,6 +701,52 @@ una para "atrás" y otra para "adelante". Implementar las funciones:
            pilaAtras.push(paginaActual)
            paginaActual ← pilaAdelante.pop()
 
+Código:
+class Pila:
+    def __init__(self):
+        self.items = []
+    def push(self, elemento):
+        self.items.append(elemento)
+    def pop(self):
+        if not self.isEmpty():
+            return self.items.pop()
+    def isEmpty(self):
+        return len(self.items) == 0
+    def limpiar(self):
+        self.items = []
+class Navegador:
+    def __init__(self):
+        self.pilaAtras = Pila()
+        self.pilaAdelante = Pila()
+        self.paginaActual = None
+    def visitar(self, url):
+        if self.paginaActual is not None:
+            self.pilaAtras.push(self.paginaActual)
+        self.paginaActual = url
+        self.pilaAdelante.limpiar()
+        print(f"Visitando: {self.paginaActual}")
+    def atras(self):
+        if self.pilaAtras.isEmpty():
+            print("Error: No hay páginas anteriores")
+            return
+        self.pilaAdelante.push(self.paginaActual)
+        self.paginaActual = self.pilaAtras.pop()
+        print(f"Volviendo atrás a: {self.paginaActual}")
+    def adelante(self):
+        if self.pilaAdelante.isEmpty():
+            print("Error: No hay páginas siguientes")
+            return
+        self.pilaAtras.push(self.paginaActual)
+        self.paginaActual = self.pilaAdelante.pop()
+        print(f"Avanzando a: {self.paginaActual}")
+nav = Navegador()
+nav.visitar("google.com")
+nav.visitar("youtube.com")
+nav.visitar("wikipedia.org")
+nav.atras()
+nav.atras()
+nav.adelante()
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 21 [INTERMEDIO]: Verificar Palíndromos
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -815,4 +946,71 @@ pueda retornar el elemento mínimo en tiempo constante O(1). Implementar:
            Si pilaMinimos.isEmpty():
                error
            Retornar pilaMinimos.peek()
+Código:
+class PilaMinimo:
+    """
+    Pila que mantiene el mínimo en tiempo O(1)
+    Usa dos pilas: una para elementos y otra para mínimos
+    """
+    
+    def __init__(self):
+        self._elementos = []
+        self._minimos = []
+    
+    def push(self, elemento):
+        """Apila elemento y actualiza mínimo si es necesario"""
+        self._elementos.append(elemento)
+        
+        #Si es el primer elemento o es menor/igual al mínimo actual
+        if not self._minimos or elemento <= self._minimos[-1]:
+            self._minimos.append(elemento)
+    
+    def pop(self):
+        """Desapila elemento y actualiza mínimo si es necesario"""
+        if not self._elementos:
+            raise IndexError("Pop desde pila vacía")
+        
+        elemento = self._elementos.pop()
+        
+        #Si el elemento desapilado era el mínimo, también lo quitamos
+        if elemento == self._minimos[-1]:
+            self._minimos.pop()
+        
+        return elemento
+    
+    def peek(self):
+        """Retorna el tope sin desapilar"""
+        if not self._elementos:
+            raise IndexError("Peek en pila vacía")
+        return self._elementos[-1]
+    
+    def get_min(self):
+        """Retorna el mínimo actual en O(1)"""
+        if not self._minimos:
+            raise IndexError("Pila vacía")
+        return self._minimos[-1]
+    
+    def is_empty(self):
+        return len(self._elementos) == 0
 
+# Demostración:
+pila = PilaMinimo()
+operaciones = [
+    ('push', 5),
+    ('push', 3),
+    ('push', 7),
+    ('push', 1),
+    ('push', 4),
+]
+print("Operación\tPila\t\tMínimo")
+print("-" * 40)
+
+for op, valor in operaciones:
+    pila.push(valor)
+    print(f"push({valor})\t\t{pila._elementos}\t{pila.get_min()}")
+
+print("\nDesapilando...")
+while not pila.is_empty():
+    elemento = pila.pop()
+    minimo = pila.get_min() if not pila.is_empty() else "N/A"
+    print(f"pop() → {elemento}\t{pila._elementos}\t{minimo}")
