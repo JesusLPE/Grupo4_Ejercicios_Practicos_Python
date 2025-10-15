@@ -15,9 +15,39 @@ al origen y la distancia entre dos puntos.
          * distanciaOrigen() → real
          * distanciaA(otroPunto) → real
 
+Código:
+import math
+class Punto2D:
 
+    #Representa un punto en el plano (x, y)
+    def __init__(self, x: float, y: float):
+        #Crea un punto con coordenadas (x, y)
+        self.x = x
+        self.y = y
 
+    def distancia_origen(self) -> float:
+        #Retorna la distancia al origen (0, 0)
+        return math.sqrt(self.x**2 + self.y**2)
 
+    def distancia_a(self, otro_punto: 'Punto2D') -> float:
+        #Retorna la distancia entre dos puntos
+        dx = self.x - otro_punto.x
+        dy = self.y - otro_punto.y
+        return math.sqrt(dx**2 + dy**2)
+
+    def __str__(self):
+        #Muestra el punto en formato (x, y)
+        return f"({self.x}, {self.y})"
+       
+#Ejemplo de uso:
+if __name__ == "__main__":
+    p1 = Punto2D(3, 4)
+    p2 = Punto2D(0, 0)
+   
+    print(f"Punto 1: {p1}")
+    print(f"Punto 2: {p2}")
+    print(f"Distancia de {p1} al origen: {p1.distancia_origen():.2f}")
+    print(f"Distancia entre {p1} y {p2}: {p1.distancia_a(p2):.2f}")
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 2 [BÁSICO]: TAD Rectangulo
@@ -121,7 +151,57 @@ dos fechas y verificar si una fecha es anterior a otra.
          * esAnterior(otraFecha) → booleano
          * diasEntre(otraFecha) → entero
 
+Código:
+from datetime import date
+class Fecha:
 
+    #Representa una fecha (día, mes, año)
+    def __init__(self, dia: int, mes: int, anio: int):
+        #Crea una nueva fecha
+        self.dia = dia
+        self.mes = mes
+        self.anio = anio
+        if not self.es_valida():
+            raise ValueError("Fecha inválida según el calendario gregoriano")
+
+    def es_bisiesto(self) -> bool:
+        #Retorna True si el año es bisiesto
+        return (self.anio % 4 == 0 and self.anio % 100 != 0) or (self.anio % 400 == 0)
+
+    def es_valida(self) -> bool:
+        #Verifica si la fecha existe
+        try:
+            date(self.anio, self.mes, self.dia)
+            return True
+        except ValueError:
+            return False
+
+    def es_anterior(self, otra: 'Fecha') -> bool:
+        #Retorna True si esta fecha es anterior a otra
+        return date(self.anio, self.mes, self.dia) < date(otra.anio, otra.mes, otra.dia)
+
+    def dias_entre(self, otra: 'Fecha') -> int:
+        #Calcula los días entre dos fechas
+        f1 = date(self.anio, self.mes, self.dia)
+        f2 = date(otra.anio, otra.mes, otra.dia)
+        return abs((f1 - f2).days)
+
+    def __str__(self):
+        #Muestra la fecha en formato dd/mm/aaaa
+        return f"{self.dia:02d}/{self.mes:02d}/{self.anio}"
+
+#Ejemplo de uso:
+
+if __name__ == "__main__":
+    f1 = Fecha(12, 10, 2025)
+    f2 = Fecha(1, 1, 2024)
+
+    print(f"Fecha 1: {f1}")
+    print(f"Fecha 2: {f2}")
+    print(f"¿{f1.anio} es bisiesto? → {f1.es_bisiesto()}")
+    print(f"¿{f2.anio} es bisiesto? → {f2.es_bisiesto()}")
+    print(f"¿{f2} es anterior a {f1}? → {f2.es_anterior(f1)}")
+    print(f"Días entre {f1} y {f2}: {f1.dias_entre(f2)} días")
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 7 [BÁSICO]: Análisis de Búsqueda Lineal
@@ -204,6 +284,46 @@ es O(log n) y en qué casos es más eficiente que la búsqueda lineal.
                der ← medio - 1
        
        Retornar -1
+
+Código:
+class BusquedaBinaria:
+
+    # TAD que realiza una búsqueda binaria en una lista ordenada
+    def __init__(self, lista):
+        # Inicializa la lista ordenada
+        self.lista = lista
+
+    def buscar(self, elemento):
+        # Busca un elemento en la lista
+        izq = 0
+        der = len(self.lista) - 1
+        while izq <= der:
+            medio = (izq + der) // 2  # Calcula el punto medio
+            if self.lista[medio] == elemento:
+                return medio
+            elif self.lista[medio] < elemento:
+                izq = medio + 1
+            else:
+                der = medio - 1
+        return -1  # No encontrado
+
+    def __str__(self):
+        # Muestra la lista contenida
+        return f"Lista: {self.lista}"
+
+#ejemplo de uso
+if __name__ == "__main__":
+    datos = [2, 4, 6, 8, 10, 12, 14, 16, 18]
+    buscador = BusquedaBinaria(datos)
+
+    print(buscador)
+    
+    elemento = 10
+    resultado = buscador.buscar(elemento)
+    if resultado != -1:
+        print(f"Elemento {elemento} encontrado en la posición {resultado}.")
+    else:
+        print(f"Elemento {elemento} no encontrado en la lista.")
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 12 [INTERMEDIO]: Complejidad con Estructuras de Datos
@@ -315,7 +435,47 @@ Ejemplos:
        
        Retornar pila.isEmpty()
 
+Código:
+class Pila:
 
+    #almacena elementos con regla LIFO
+    def __init__(self):
+        #Crea una pila vacía
+        self.elementos = []
+
+    def push(self, elemento):
+        #Agrega un elemento al tope
+        self.elementos.append(elemento)
+
+    def pop(self):
+        #Quita y devuelve el tope
+        if not self.esta_vacia():
+            return self.elementos.pop()
+        else:
+            raise IndexError("❌ La pila está vacía")
+
+    def esta_vacia(self) -> bool:
+        # Retorna True si la pila está vacía
+        return len(self.elementos) == 0
+
+#validar paréntesis balanceados
+def validar_parentesis(expresion: str) -> bool:
+    #Verifica si los paréntesis están balanceados
+    pila = Pila()
+    for caracter in expresion:
+        if caracter == '(':
+            pila.push(caracter)
+        elif caracter == ')':
+            if pila.esta_vacia():
+                return False
+            pila.pop()
+    return pila.esta_vacia()
+
+#ejemplo de uso
+if __name__ == "__main__":
+    ejemplos = ["(())", "(()", ")(", "((()))", "())(()"]
+    for exp in ejemplos:
+        print(f"Expresión: {exp} → Balanceada: {validar_parentesis(exp)}")
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 17 [INTERMEDIO]: Validar Múltiples Tipos de Delimitadores
@@ -484,6 +644,55 @@ Ejemplos: "anilina", "radar", "reconocer"
                Retornar Falso
        
        Retornar Verdadero
+
+Código:
+class Pila:
+
+    #almacena elementos con regla LIFO
+    def __init__(self):
+        #Crea una pila vacía
+        self.elementos = []
+
+    def push(self, elemento):
+        #Agrega un elemento al tope
+        self.elementos.append(elemento)
+
+    def pop(self):
+        #Quita y devuelve el elemento superior
+        if not self.esta_vacia():
+            return self.elementos.pop()
+        else:
+            raise IndexError("La pila está vacía")
+
+    def esta_vacia(self) -> bool:
+        # Retorna True si la pila no tiene elementos
+        return len(self.elementos) == 0
+
+#Verificar si una palabra es palíndromo
+def es_palindromo(texto: str) -> bool:
+    #Verifica si un texto es palíndromo usando una pila
+    pila = Pila()
+    texto_limpio = texto.replace(" ", "").lower()
+    n = len(texto_limpio)
+
+    #Apila la primera mitad
+    for i in range(n // 2):
+        pila.push(texto_limpio[i])
+
+    #Determina inicio de la segunda mitad
+    inicio = (n // 2) + 1 if n % 2 != 0 else n // 2
+
+    #Compara con los desapilados
+    for i in range(inicio, n):
+        if pila.esta_vacia() or texto_limpio[i] != pila.pop():
+            return False
+    return pila.esta_vacia()
+
+#Ejemplo de uso
+if __name__ == "__main__":
+    ejemplos = ["anilina", "radar", "reconocer", "python", "Neuquen", "amor a roma"]
+    for palabra in ejemplos:
+        print(f"{palabra!r} → Palíndromo: {es_palindromo(palabra)}")
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 22 [INTERMEDIO]: Sistema Deshacer/Rehacer (Undo/Redo)
