@@ -66,6 +66,45 @@ calcular área, perímetro y verificar si es un cuadrado.
          * calcularPerimetro() → real
          * esCuadrado() → booleano
 
+Código:
+class Rectangulo:
+    
+# Precondición: base y altura deben ser números reales positivos.
+    def _init_(self, base: float, altura: float):
+        if base <= 0 or altura <= 0:
+            raise ValueError("La base y la altura deben ser mayores que cero.")
+        self._base = base
+        self._altura = altura
+
+#Postcondición: retorna un valor >= 0
+    def calcular_area(self) -> float:
+        return self._base * self._altura
+
+    def calcular_perimetro(self) -> float:
+        return 2 * (self._base + self._altura)
+    
+# Verificar si es cuadrado, verdadero o falso  
+    def es_cuadrado(self) -> bool:
+        return self._base == self._altura
+
+# Texto del rectángulo
+    def _str_(self):
+        return f"Rectángulo(base={self._base}, altura={self._altura})"
+
+#Ejemplo
+rect1 = Rectangulo (10,5) 
+rect2 = Rectangulo(6,6)
+
+print(rect1)
+print(f"Área: {rect1.calcular_area()}")
+print(f"Perímetro: {rect1.calcular_perimetro()}")
+print(f"¿Es cuadrado? {rect1.es_cuadrado()}")
+
+print("\n", rect2)
+print(f"Área: {rect2.calcular_area()}")
+print(f"Perímetro: {rect2.calcular_perimetro()}")
+print(f"¿Es cuadrado? {rect2.es_cuadrado()}")
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 3 [INTERMEDIO]: TAD Fraccion con Sobrecarga de Operadores
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -268,7 +307,25 @@ búsqueda lineal. Determinar el mejor caso, caso promedio y peor caso.
                Retornar i
        Retornar -1
 
+Código:
+def busqueda_lineal(lista, elemento):
+  # Realiza una búsqueda lineal en una lista, retorna el índice del elemento si se encuentra, o -1 si no está.
 
+    for i in range(len(lista)):
+        if lista[i] == elemento:
+            return i
+    return -1
+
+# Ejemplo 
+lista = [3, 8, 5, 2, 9]
+elemento = 2
+
+resultado = busqueda_lineal(lista, elemento)
+
+if resultado != -1:
+    print(f" El elemento {elemento} se encuentra en la posición {resultado}.")
+else:
+    print(f"El elemento {elemento} no está en la lista.")
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 8 [BÁSICO]: Análisis de Suma de Elementos
@@ -398,6 +455,29 @@ en Python:
 - Eliminar un elemento
 
 Indicar cuándo conviene usar cada estructura de datos.
+
+Código:
+def comparar_complejidad():
+ 
+    print("=== COMPLEJIDAD DE OPERACIONES ===\n")
+
+    print(" LISTAS:")
+    print("- Buscar un elemento: O(n) → depende del tamaño de la lista.")
+    print("- Insertar un elemento al final: O(1) promedio.")
+    print("- Insertar en posición específica o eliminar: O(n) (se deben mover elementos).")
+
+    print("\n DICCIONARIOS:")
+    print("- Buscar una clave: O(1) promedio (usa tabla hash).")
+    print("- Insertar una clave-valor: O(1) promedio.")
+    print("- Eliminar una clave: O(1) promedio.")
+
+    print("\n Cuándo usar cada estructura:")
+    print("- Usa LISTA cuando necesitas mantener un orden secuencial de elementos o duplicados.")
+    print("- Usa DICCIONARIO cuando necesitas búsquedas rápidas por clave y acceso directo.")
+    print("- En general, los diccionarios son más eficientes en búsqueda e inserción.")
+
+#  Ejemplo 
+comparar_complejidad()
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 13 [INTERMEDIO]: Análisis de Algoritmo Recursivo
@@ -591,6 +671,35 @@ Ejemplos:
                    Retornar Falso
        
        Retornar pila.isEmpty()
+
+Código:
+def validar_delimitadores(expresion):
+    pila = []  
+    pares = {')': '(', ']': '[', '}': '{'}  # Relación cierre ↔ apertura
+
+    for caracter in expresion:
+        # Si es un delimitador de apertura, lo guardamos en la pila
+        if caracter in "([{":
+            pila.append(caracter)
+        # Si es de cierre, comprobamos correspondencia
+        elif caracter in ")]}":
+            if not pila:  # Si no hay nada que cerrar
+                return False
+            tope = pila.pop()  # Extrae el último abierto
+            if pares[caracter] != tope:  # Si no coincide el tipo
+                return False
+
+    # Si al final quedan aperturas sin cerrar
+    return not pila
+
+# Ejemplos 
+expresiones = ["{[()]}", "([)]", "{{[[(())]]}}", "({[", "[()]{}{[()()]()}"]
+
+for exp in expresiones:
+    if validar_delimitadores(exp):
+        print(f"{exp} Correcta")
+    else:
+        print(f"{exp} Incorrecta")
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 18 [INTERMEDIO]: Evaluador de Expresiones Postfijas (RPN)
@@ -859,6 +968,76 @@ usando dos pilas. Debe soportar:
                retornar
            pilaDeshacer.push(contenido)
            contenido ← pilaRehacer.pop()
+
+Código:
+class Pila:
+    def _init_(self):
+        self._elementos = []
+
+    def empujar(self, elemento):
+        self._elementos.append(elemento)
+
+    def estallar(self):
+        return self._elementos.pop()
+
+    def esta_vacia(self):
+        return len(self._elementos) == 0
+
+#Vaciar la pila
+    def limpiar(self):
+        self._elementos.clear()
+
+class EditorDeTexto:
+    #Editor de texto con funciones de deshacer y rehacer
+    
+    def _init_(self):
+        self._contenido = ""
+        self._pila_deshacer = Pila()
+        self._pila_rehacer = Pila()
+
+    def escribir(self, texto: str):
+        # Se agrega texto nuevo al contenido actual.
+        
+        self._pila_deshacer.empujar(self._contenido)
+        self._contenido += texto
+        self._pila_rehacer.limpiar()
+
+    def deshacer(self):
+       # Deshace la última acción, mueve el estado actual a la pila
+    
+        if self._pila_deshacer.esta_vacia():
+            print(" No hay acciones para deshacer.")
+            return
+        self._pila_rehacer.empujar(self._contenido)
+        self._contenido = self._pila_deshacer.estallar()
+
+    def rehacer(self):
+        #Rehace una acción previamente deshecha.
+
+        if self._pila_rehacer.esta_vacia():
+            print(" No hay acciones para rehacer.")
+            return
+        self._pila_deshacer.empujar(self._contenido)
+        self._contenido = self._pila_rehacer.estallar()
+
+    def mostrar_contenido(self):
+        #Muestra el contenido actual del editor
+        print(f" Contenido actual: '{self._contenido}'")
+
+# Ejemplo
+editor = EditorDeTexto()
+
+editor.escribir("Hola")
+editor.mostrar_contenido()
+
+editor.escribir(" como estás")
+editor.mostrar_contenido()
+
+editor.deshacer()
+editor.mostrar_contenido()
+
+editor.rehacer()
+editor.mostrar_contenido()
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 23 [INTERMEDIO]: Torre de Hanoi
