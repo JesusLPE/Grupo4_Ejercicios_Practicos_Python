@@ -148,6 +148,69 @@ no se pueda retirar más del saldo disponible.
          * consultarSaldo() → real
          * obtenerTitular() → cadena
 
+Código:
+class CuentaBancaria:
+    # Metodo para iniciar
+    def _init_(self, numero, titular, saldo_inicial=0.0):
+        self.__numeroCuenta = numero
+        self.__titular = titular
+        self.__saldo = saldo_inicial if saldo_inicial >= 0 else 0.0
+        self.__verificar_invariante()
+
+    # Metodo privado para mantener el invariante saldo >= 0
+    def __verificar_invariante(self):
+        assert self.__saldo >= 0, "Error: el saldo no puede ser negativo."
+
+    # Metodo para depositar dinero
+    def depositar(self, monto):
+        if monto > 0:
+            self.__saldo += monto
+            self.__verificar_invariante()
+        else:
+            print("El monto a depositar debe ser positivo.")
+
+    # Metodo para retirar dinero
+    def retirar(self, monto):
+        if monto <= 0:
+            print("El monto debe ser positivo.")
+            return False
+        elif monto > self.__saldo:
+            print("Fondos insuficientes.")
+            return False
+        else:
+            self.__saldo -= monto
+            self.__verificar_invariante()
+            return True
+
+    # Metodo para obtener el saldo
+    def consultarSaldo(self):
+        return self.__saldo
+
+    # Metodo para obtener el nombre del titular
+    def obtenerTitular(self):
+        return self.__titular
+
+    # Sobrecarga de método _str_
+    def _str_(self):
+        return f"Cuenta #{self._numeroCuenta} - Titular: {self.titular} - Saldo: ${self._saldo:.2f}"
+    
+
+    # Crear una cuenta bancaria
+cuenta1 = CuentaBancaria("1909", "Hotman Ortega", 150.0)
+
+
+# Ejemplo de uso
+
+print(cuenta1)  # Muestra información general
+
+# Depositar dinero
+cuenta1.depositar(50)
+print("Saldo después del depósito:", cuenta1.consultarSaldo())
+
+# Retirar dinero
+exito = cuenta1.retirar(100)
+print("Retiro exitoso:", exito)
+print("Saldo final:", cuenta1.consultarSaldo())
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 5 [INTERMEDIO]: TAD Conjunto
@@ -342,6 +405,27 @@ de una lista.
            suma ← suma + elemento
        Retornar suma
 
+Código:
+class Sumador:
+    #Clase que representa un sumador de elementos de una lista.
+
+    def __init__(self, lista):
+        self.lista = lista
+
+    def sumaElementos(self):
+        #Suma todos los elementos de la lista almacenada.
+        suma = 0
+        for elemento in self.lista:
+            suma += elemento
+        return suma
+
+#Ejemplo de uso
+numeros = [4, 7, 2, 9, 5]
+sumador = Sumador(numeros)
+
+print("Lista:", sumador.lista)
+print("Suma total:", sumador.sumaElementos())
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 9 [BÁSICO]: Comparar Complejidades
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -351,6 +435,69 @@ Ordenar las siguientes complejidades de menor a mayor eficiencia:
 O(n²), O(1), O(log n), O(n log n), O(2ⁿ), O(n), O(n³)
 
 Además, indicar cuál sería preferible para un dataset de 1 millón de elementos.
+
+Código:
+class ComplejidadAlgoritmica:
+    # Metodo para iniciar
+    def _init_(self, nombre, orden):
+        self.__nombre = nombre
+        self.__orden = orden
+        self.__verificar_invariante()
+
+    # Verifica que el orden sea valido
+    def __verificar_invariante(self):
+        assert self.__orden >= 0, "El valor del orden debe ser >= 0"
+
+    # Devuelve el nombre de la complejidad
+    def mostrar(self):
+        return self.__nombre
+
+    # Compara dos complejidades: menor orden y más eficiente
+    def comparar(self, otra):
+        if self._orden < otra._orden:
+            return -1
+        elif self._orden > otra._orden:
+            return 1
+        else:
+            return 0
+
+    # Retorna True si esta es más eficiente que otra
+    def esMasEficiente(self, otra):
+        return self._orden < otra._orden
+
+    # Metodo para ordenar una lista de complejidades
+    def ordenar(self, listaComplejidades):
+        n = len(listaComplejidades)
+        for i in range(n - 1):
+            for j in range(n - i - 1):
+                if listaComplejidades[j].comparar(listaComplejidades[j + 1]) == 1:
+                    listaComplejidades[j], listaComplejidades[j + 1] = listaComplejidades[j + 1], listaComplejidades[j]
+        return listaComplejidades
+
+    # Representación legible con sobrecarga
+    def _str_(self):
+        return f"{self.__nombre}"
+
+# Ejemplo de uso
+
+if __name__ == "_main_": #Esto indica que el programa empieza desde aqui y no desde arriba
+    a1 = ComplejidadAlgoritmica("O(2ⁿ)", 6)
+    a2 = ComplejidadAlgoritmica("O(n³)", 5)
+    a3 = ComplejidadAlgoritmica("O(n²)", 4)
+    a4 = ComplejidadAlgoritmica("O(n log n)", 3)
+    a5 = ComplejidadAlgoritmica("O(n)", 2)
+    a6 = ComplejidadAlgoritmica("O(log n)", 1)
+    a7 = ComplejidadAlgoritmica("O(1)", 0)
+
+    lista = [a1, a2, a3, a4, a5, a6, a7]
+
+    # Cualquiera de las instancias puede ordenar la lista
+    referencia = a1
+    ordenadas = referencia.ordenar(lista)
+
+    print("Complejidades ordenadas (mejor a peor eficiencia):")
+    for c in ordenadas:
+        print("-", c.mostrar())
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 10 [INTERMEDIO]: Análisis de Bucles Anidados
@@ -494,7 +641,30 @@ Comparar con la versión iterativa.
        SiNo:
            Retornar n * factorialRecursivo(n - 1)
 
+Código:
+class Factorial:
+    #Clase que calcula el factorial de forma recursiva e iterativa
+    def factorialRecursivo(self, n):
+        #Calcula el factorial de n de manera recursiva
+        if n <= 1:
+            return 1
+        else:
+            return n * self.factorialRecursivo(n - 1)
 
+    def factorialIterativo(self, n):
+        #Calcula el factorial de n de manera iterativa
+        resultado = 1
+        for i in range(2, n + 1):
+            resultado *= i
+        return resultado
+
+#ejemplo de uso
+calc = Factorial()
+n = 5
+
+print(f"=== CÁLCULO FACTORIAL DE {n} ===")
+print("Versión recursiva:", calc.factorialRecursivo(n))
+print("Versión iterativa:", calc.factorialIterativo(n))
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 14 [BÁSICO]: Implementación Básica de Pila
@@ -527,7 +697,64 @@ size (obtener tamaño).
        * size() → entero
            retornar cantidad de elementos
 
+Código:
+class Pila:
+    # Inicio de la estructura de datos
+    def _init_(self):
+        self.__elementos = []  # atributo privado
 
+    # Apilar un elemento
+    def push(self, elemento):
+        self.__elementos.append(elemento)
+
+    # Desapilar (retorna el último elemento)
+    def pop(self):
+        if self.isEmpty():
+            raise IndexError("Error: la pila está vacía.")
+        return self.__elementos.pop()
+
+    # Ver el elemento del tope sin eliminarlo
+    def peek(self):
+        if self.isEmpty():
+            raise IndexError("Error: la pila está vacía.")
+        return self.__elementos[-1]
+
+    # Verificar si está vacía
+    def isEmpty(self):
+        return len(self.__elementos) == 0
+
+    # Retornar el tamaño
+    def size(self):
+        return len(self.__elementos)
+
+    # Representación en texto (opcional, para ver el contenido)
+    def _str_(self):
+        return f"Pila: {self.__elementos}"
+
+
+# Ejemplo de uso
+
+pila = Pila()
+
+pila.push(10)
+pila.push(20)
+pila.push(30)
+print(pila)
+
+# Consultar el tope
+print("Tope:", pila.peek())  
+
+# Desapilar un elemento
+print("Elemento desapilado:", pila.pop())
+
+# Ver tamaño actual
+print("Tamaño actual:", pila.size())
+
+# Verificar si está vacía
+print("¿Está vacía?:", pila.isEmpty())
+
+# Mostrar la pila final
+print(pila)  # [10, 20]
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 15 [BÁSICO]: Invertir una Cadena
@@ -773,6 +1000,77 @@ Ejemplo: "3 + 4 * 2" → "3 4 2 * +"
            agregar pila.pop() a salida
        
        Retornar unir salida con espacios
+
+Código:
+class Pila:
+    # Iniciando la base de datos
+    def _init_(self):
+        self.__elementos = []
+
+    def push(self, elemento):
+        self.__elementos.append(elemento)
+
+    def pop(self):
+        if self.isEmpty():
+            raise IndexError("Error: la pila está vacía.")
+        return self.__elementos.pop()
+
+    def peek(self):
+        if self.isEmpty():
+            raise IndexError("Error: la pila está vacía.")
+        return self.__elementos[-1]
+
+    def isEmpty(self):
+        return len(self.__elementos) == 0
+
+    def size(self):
+        return len(self.__elementos)
+
+
+def infijaAPostfija(expresion):
+    salida = []                      # Lista de salida
+    pila = Pila()                    # Pila para operadores
+    precedencia = {'+': 1, '-': 1, '*': 2, '/': 2}
+
+    # Separar numeros y operadores
+    tokens = expresion.split()
+
+    for token in tokens:
+        if token.isnumeric():
+            salida.append(token)
+
+        elif token == '(':
+            pila.push(token)
+
+        elif token == ')':
+            while not pila.isEmpty() and pila.peek() != '(':
+                salida.append(pila.pop())
+            pila.pop()
+
+        else:  # Es operador (+, -, *, /)
+            while (not pila.isEmpty() and pila.peek() != '(' and
+                   precedencia[pila.peek()] >= precedencia[token]):
+                salida.append(pila.pop())
+            pila.push(token)
+
+    # Vaciar la pila restante
+    while not pila.isEmpty():
+        salida.append(pila.pop())
+
+    # Unir la salida como cadena
+    return " ".join(salida)
+
+# Ejemplo de uso
+
+# Ejemplo 1
+expresion = "3 + 4 * 2"
+print("Infija:", expresion)
+print("Postfija:", infijaAPostfija(expresion))
+
+# Ejemplo 2
+expresion2 = "( 3 + 4 ) * 2"
+print("\nInfija:", expresion2)
+print("Postfija:", infijaAPostfija(expresion2))
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 20 [INTERMEDIO]: Historial de Navegación
@@ -1086,6 +1384,68 @@ Ejemplo inválido: "<html><body></html></body>"
                    Retornar Falso
        
        Retornar pila.isEmpty()
+
+Código:
+import re  # Para extraer etiquetas con expresiones regulares
+
+# Pila basico
+class Pila:
+    def _init_(self):
+        self.__elementos = []
+
+    def push(self, elemento):
+        self.__elementos.append(elemento)
+
+    def pop(self):
+        if self.isEmpty():
+            raise IndexError("Error: la pila está vacía.")
+        return self.__elementos.pop()
+
+    def peek(self):
+        if self.isEmpty():
+            raise IndexError("Error: la pila está vacía.")
+        return self.__elementos[-1]
+
+    def isEmpty(self):
+        return len(self.__elementos) == 0
+
+    def size(self):
+        return len(self.__elementos)
+
+# Funcion para validar etiquetas HTML
+def validarHTML(codigo):
+    pila = Pila()
+
+    # Expresión regular para obtener todas las etiquetas HTML <>
+    etiquetas = re.findall(r'<[^>]+>', codigo)
+
+    for etiqueta in etiquetas:
+        # Si es una etiqueta de cierre, por ejemplo </body>
+        if etiqueta.startswith("</"):
+            nombre = etiqueta[2:-1]
+            if pila.isEmpty():
+                return False
+            if pila.pop() != nombre:
+                return False
+        else:
+            # Es una etiqueta de apertura <body>
+            nombre = etiqueta[1:-1]
+            pila.push(nombre)
+
+    # Si la pila está vacía al final, está balanceado
+    return pila.isEmpty()
+
+#Ejemplo de uso
+
+# Ejemplo válido
+html_valido = "<html><body><h1>Título</h1></body></html>"
+print("Código:", html_valido)
+print("HTML válido?:", validarHTML(html_valido))
+
+# Ejemplo inválido
+html_invalido = "<html><body></html></body>"
+print("\nCódigo:", html_invalido)
+print("HTML válido?:", validarHTML(html_invalido))
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 25 [INTERMEDIO]: Pila con Mínimo en O(1)
