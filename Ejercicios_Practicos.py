@@ -126,7 +126,57 @@ simplificar la fracción.
          * dividir(otraFraccion) → Fraccion
          * simplificar() → Fraccion
 
+Código:
+from math import gcd  # gcd = máximo común divisor
 
+class Fraccion:
+    def _init_(self, numerador, denominador):
+        self.numerador = numerador
+        self.denominador = denominador
+        self.simplificar()
+
+    def simplificar(self):
+        comun = gcd(self.numerador, self.denominador)
+        self.numerador //= comun
+        self.denominador //= comun
+
+    # Sobrecarga del operador +
+    def _add_(self, otra):
+        nuevo_num = self.numerador * otra.denominador + otra.numerador * self.denominador
+        nuevo_den = self.denominador * otra.denominador
+        return Fraccion(nuevo_num, nuevo_den)
+
+    # Sobrecarga del operador -
+    def _sub_(self, otra):
+        nuevo_num = self.numerador * otra.denominador - otra.numerador * self.denominador
+        nuevo_den = self.denominador * otra.denominador
+        return Fraccion(nuevo_num, nuevo_den)
+
+    # Sobrecarga del operador *
+    def _mul_(self, otra):
+        nuevo_num = self.numerador * otra.numerador
+        nuevo_den = self.denominador * otra.denominador
+        return Fraccion(nuevo_num, nuevo_den)
+
+    # Sobrecarga del operador /
+    def _truediv_(self, otra):
+        nuevo_num = self.numerador * otra.denominador
+        nuevo_den = self.denominador * otra.numerador
+        return Fraccion(nuevo_num, nuevo_den)
+
+    def _str_(self):
+        return f"{self.numerador}/{self.denominador}"
+
+# Ejemplo
+f1 = Fraccion(2, 4)
+f2 = Fraccion(3, 6)
+
+print("Fracción 1:", f1)
+print("Fracción 2:", f2)
+print("Suma:", f1 + f2)
+print("Resta:", f1 - f2)
+print("Multiplicación:", f1 * f2)
+print("División:", f1 / f2)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 4 [INTERMEDIO]: TAD CuentaBancaria
