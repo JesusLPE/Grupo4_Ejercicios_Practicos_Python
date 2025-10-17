@@ -894,7 +894,7 @@ class Pila:
         if not self.esta_vacia():
             return self.elementos.pop()
         else:
-            raise IndexError("❌ La pila está vacía")
+            raise IndexError("La pila está vacía")
 
     def esta_vacia(self) -> bool:
         # Retorna True si la pila está vacía
