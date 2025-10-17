@@ -1013,6 +1013,80 @@ Ejemplo: "3 4 + 2 *" equivale a (3 + 4) * 2 = 14
            pilaDeshacer.push(contenido)
            contenido ← pilaRehacer.pop()
 
+Código:
+class Pila:
+    #Clase que implementa una pila básica.
+    def __init__(self):
+        self.items = []
+
+    def apilar(self, item):
+        #Inserta un elemento en la pila
+        self.items.append(item)
+
+    def desapilar(self):
+        #Quita el último elemento apilado
+        if not self.esta_vacia():
+            return self.items.pop()
+
+    def esta_vacia(self):
+        #Retorna True si la pila está vacía
+        return len(self.items) == 0
+
+    def cima(self):
+        #Devuelve el elemento superior sin quitarlo
+        if not self.esta_vacia():
+            return self.items[-1]
+
+class EvaluadorPostfijo:
+    #Clase para evaluar expresiones en notación postfija (RPN).
+
+    def __init__(self):
+        self.pila = Pila()
+
+    def aplicar_operador(self, op1, op2, operador):
+        #Aplica el operador aritmético correspondiente
+        if operador == '+':
+            return op1 + op2
+        elif operador == '-':
+            return op1 - op2
+        elif operador == '*':
+            return op1 * op2
+        elif operador == '/':
+            return op1 / op2
+        else:
+            raise ValueError(f"Operador no válido: {operador}")
+
+    def evaluar(self, expresion):
+        #Evalúa una expresión postfija
+        tokens = expresion.split()
+        for token in tokens:
+            if token.isdigit():
+                self.pila.apilar(int(token))
+            else:
+                op2 = self.pila.desapilar()
+                op1 = self.pila.desapilar()
+                resultado = self.aplicar_operador(op1, op2, token)
+                self.pila.apilar(resultado)
+        return self.pila.desapilar()
+
+#Ejemplo de uso
+evaluador = EvaluadorPostfijo()
+expresion = "3 4 + 2 * 7 -"  # (3 + 4) * 2 - 7 = 7
+resultado = evaluador.evaluar(expresion)
+
+print(f"Expresión postfija: {expresion}")
+print(f"Resultado: {resultado}")
+
+"""
+ANÁLISIS DE COMPLEJIDAD:
+- Tiempo: O(n), donde n es la cantidad de tokens en la expresión.
+  Cada token se procesa una sola vez.
+- Espacio: O(n), por el uso de la pila que almacena los operandos.
+- Comentario:
+  Este algoritmo simula la evaluación matemática usando una estructura tipo LIFO,
+  ideal para convertir o resolver expresiones sin paréntesis.
+"""
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 19 [INTERMEDIO]: Convertir Infija a Postfija
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1407,6 +1481,76 @@ auxiliar, con las reglas:
        hanoi(n-1, origen, auxiliar, destino)
        mover disco de origen a destino
        hanoi(n-1, auxiliar, destino, origen)
+
+Código:
+class Pila:
+    #Representa una pila con nombre
+    def __init__(self, nombre):
+        self.items = []
+        self.nombre = nombre
+
+    def apilar(self, item):
+        #Agrega un disco al tope
+        self.items.append(item)
+
+    def desapilar(self):
+        #Quita y devuelve el disco superior
+        if not self.esta_vacia():
+            return self.items.pop()
+
+    def esta_vacia(self):
+        #Retorna True si la pila está vacía
+        return len(self.items) == 0
+
+    def cima(self):
+        #Devuelve el disco superior sin quitarlo
+        if not self.esta_vacia():
+            return self.items[-1]
+
+    def __str__(self):
+        #Muestra el nombre y contenido de la pila
+        return f"{self.nombre}: {self.items}"
+
+#función: mover un disco entre torres
+
+def mover_disco(origen, destino):
+    #Mueve un disco del origen al destino
+    disco = origen.desapilar()
+    destino.apilar(disco)
+    print(f"Mover disco {disco} de {origen.nombre} --> {destino.nombre}")
+    print(origen, destino, "\n")
+
+#Función recursiva: resolver Torres de Hanoi
+
+def hanoi(n, origen, destino, auxiliar):
+    #Mueve n discos desde origen hasta destino
+    if n == 1:
+        mover_disco(origen, destino)
+        return
+    hanoi(n - 1, origen, auxiliar, destino)
+    mover_disco(origen, destino)
+    hanoi(n - 1, auxiliar, destino, origen)
+
+#Programa principal
+
+if __name__ == "__main__":
+    n = 3  #Número de discos
+    origen = Pila("Origen")
+    destino = Pila("Destino")
+    auxiliar = Pila("Auxiliar")
+
+    #Apilar discos en la torre de origen
+    for i in range(n, 0, -1):
+        origen.apilar(i)
+
+    print("Estado inicial:")
+    print(origen, destino, auxiliar, "\n")
+
+    #Resolver el problema
+    hanoi(n, origen, destino, auxiliar)
+
+    print("Estado final:")
+    print(origen, destino, auxiliar)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EJERCICIO 24 [INTERMEDIO]: Validar Sintaxis HTML Simplificada
